@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Water",
+    "INCI_name": "Aqua",
+    "function": "Solvent",
+    "description": "Water is the most widely used solvent in cosmetic and personal care products. It is primarily used to dissolve many of the ingredients that impart skin benefits, such as conditioning agents and cleansing agents.",
+    "ph_min": null,
+    "ph_max": null,
+    "temp_min": 0.0,
+    "temp_max": 100.0,
+    "use_level_min": 0.0,
+    "use_level_max": 100.0
+  },
+  {
+    "name": "Stearic Acid",
+    "INCI_name": "Stearic Acid",
+    "function": "Surfactant, Emulsifier",
+    "description": "Stearic Acid is a fatty acid used as an emulsifier and surfactant. It has cleansing and emulsifying properties, making it useful in soaps and lotions.",
+    "ph_min": 5.5,
+    "ph_max": 8.0,
+    "temp_min": 54.0,
+    "temp_max": 70.0,
+    "use_level_min": 0.5,
+    "use_level_max": 5.0
+  },
+  {
+    "name": "Phenoxyethanol",
+    "INCI_name": "Phenoxyethanol",
+    "function": "Preservative",
+    "description": "Phenoxyethanol is a glycol ether used as a preservative in cosmetic and personal care products. It is effective against a broad spectrum of microorganisms and is often used to extend the shelf life of products.",
+    "ph_min": 3.0,
+    "ph_max": 10.0,
+    "temp_min": null,
+    "temp_max": 85.0,
+    "use_level_min": 0.1,
+    "use_level_max": 1.0
+  },
+  {
+    "name": "Mineral Oil",
+    "INCI_name": "Paraffinum Liquidum",
+    "function": "Emollient",
+    "description": "Mineral Oil, also known as Paraffinum Liquidum, is a highly refined petroleum-derived oil. It is used in a variety of cosmetic and personal care products for its ability to lock in moisture and create a protective barrier on the skin.",
+    "ph_min": null,
+    "ph_max": null,
+    "temp_min": null,
+    "temp_max": null,
+    "use_level_min": 0.5,
+    "use_level_max": 10.0
+  }
+]
