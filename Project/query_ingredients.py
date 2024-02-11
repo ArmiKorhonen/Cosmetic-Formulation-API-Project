@@ -1,5 +1,5 @@
 from db_setup import db, app
-from db_setup import Ingredient  # Ensure this import matches your project structure
+from db_setup import Ingredient
 
 def fetch_and_print_ingredients():
     with app.app_context():
@@ -12,3 +12,5 @@ def fetch_and_print_ingredients():
 
 if __name__ == '__main__':
     fetch_and_print_ingredients()
+
+
