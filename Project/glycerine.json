@@ -1,0 +1,12 @@
+{
+  "name": "Glycerine",
+  "INCI_name": "Glycerin",
+  "function": "Humectant, Moisturizer",
+  "description": "Glycerine, also known as glycerol, is a natural compound derived from vegetable oils or animal fats. It is a colorless and odorless liquid that is widely used in cosmetic products for its excellent moisturizing and hydrating properties. Glycerine works by drawing water into the outer layer of the skin from deeper levels of the skin and the air.",
+  "ph_min": null,
+  "ph_max": null,
+  "temp_min": null,
+  "temp_max": null,
+  "use_level_min": 0.5,
+  "use_level_max": 20.0
+}
