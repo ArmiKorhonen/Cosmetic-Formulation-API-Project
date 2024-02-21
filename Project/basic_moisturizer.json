@@ -1,0 +1,47 @@
+{
+  "title": "Basic Moisturizer",
+  "description": "Simple moisturizer with glycerine.",
+  "user_id": 1,
+  "rating": null,
+  "instructions": "Mix the phases and allow to set for 24 hours before using.",
+  "phases": [
+    {
+      "name": "Water phase",
+      "note": "Heat and hold to 80C.",
+      "ingredients": [
+        {
+          "ingredient_id": 1,
+          "quantity": 89.5
+        },
+        {
+          "ingredient_id": 5,
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "name": "Oil phase",
+      "note": "Heat until melted.",
+      "ingredients": [
+        {
+          "ingredient_id": 4,
+          "quantity": 5
+        },
+        {
+          "ingredient_id": 2,
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "name": "Cooldown phase",
+      "note": "Mix after cooldown to below 50C.",
+      "ingredients": [
+        {
+          "ingredient_id": 3,
+          "quantity": 0.5
+        }
+      ]
+    }
+  ]
+}
