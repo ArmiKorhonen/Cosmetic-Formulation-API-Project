@@ -1,23 +1,16 @@
-from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///cosme-api-project.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db = SQLAlchemy(app)
-
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(30), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
+db = SQLAlchemy()
 
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    phases = db.relationship('Phase', backref='recipe', lazy=True)
+    phases = db.relationship('Phase', backref='recipe', lazy=True, cascade="all, delete-orphan")
+    rating = db.Column(db.Integer, nullable=True)
+    instructions = db.Column(db.Text, nullable=True)
+    version_of = db.Column(db.Integer, nullable=True)
 
 class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -35,12 +28,14 @@ class Ingredient(db.Model):
 class Phase(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id', ondelete="CASCADE"), nullable=False)
+    note = db.Column(db.Text, nullable=True)
+    order_number = db.Column(db.Integer, nullable=False)
 
 class RecipeIngredientPhase(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
-    phase_id = db.Column(db.Integer, db.ForeignKey('phase.id'), nullable=False)
-    ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredient.id'), nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id', ondelete="CASCADE"), nullable=False)
+    phase_id = db.Column(db.Integer, db.ForeignKey('phase.id', ondelete="CASCADE"), nullable=False)
+    ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredient.id', ondelete='RESTRICT'), nullable=False)
     quantity = db.Column(db.Float, nullable=False)
-    note = db.Column(db.Text, nullable=True)
+

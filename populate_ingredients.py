@@ -1,5 +1,5 @@
 import json
-from db_setup import db, app  # Ensure you also import app
+from db_setup import db, app 
 from db_setup import Ingredient
 
 def load_ingredients_from_json(json_filepath='ingredients.json'):

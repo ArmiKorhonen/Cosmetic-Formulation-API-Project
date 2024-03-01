@@ -1,7 +1,6 @@
 {
   "title": "Basic Moisturizer",
   "description": "Simple moisturizer with glycerine.",
-  "user_id": 1,
   "rating": null,
   "instructions": "Mix the phases and allow to set for 24 hours before using.",
   "phases": [
