@@ -3,7 +3,7 @@ import os
 import tempfile
 import json
 from CosmeApi.app import create_app, db
-from CosmeApi.models import db, Ingredient, Recipe, Phase, RecipeIngredientPhase
+from CosmeApi.models import Ingredient, Recipe, Phase, RecipeIngredientPhase
 
 def _populate_db(initial_data):
     # Load ingredients

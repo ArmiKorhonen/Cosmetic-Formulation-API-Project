@@ -1,10 +1,10 @@
 from flask_restful import Resource, abort
-from CosmeApi.models import db, Ingredient
 from flask import request
 from sqlalchemy.exc import IntegrityError
+from CosmeApi.models import db, Ingredient
 
 class IngredientCollection(Resource):
-    # Get the list of all of the ingredients in the collection
+    """ Get the list of all of the ingredients in the collection"""
     def get(self):
         ingredients = Ingredient.query.all()
         ingredients_list = [{
