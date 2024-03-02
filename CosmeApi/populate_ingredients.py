@@ -2,7 +2,7 @@ import json
 from db_setup import db, app 
 from db_setup import Ingredient
 
-def load_ingredients_from_json(json_filepath='ingredients.json'):
+def load_ingredients_from_json(json_filepath='tests/ingredients.json'):
     with app.app_context():
         with open(json_filepath, 'r') as file:
             ingredients_data = json.load(file)

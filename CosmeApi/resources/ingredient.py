@@ -1,5 +1,5 @@
 from flask_restful import Resource, abort
-from models import db, Ingredient
+from CosmeApi.models import db, Ingredient
 from flask import request
 from sqlalchemy.exc import IntegrityError
 
@@ -11,6 +11,7 @@ class IngredientCollection(Resource):
             'id': ingredient.id,
             'name': ingredient.name,
             'INCI_name': ingredient.INCI_name,
+            'CAS': ingredient.CAS,
             'function': ingredient.function,
             'description': ingredient.description,
             'ph_min': ingredient.ph_min,
@@ -25,9 +26,17 @@ class IngredientCollection(Resource):
     # Add a new ingredient to the collection
     def post(self):
         data = request.get_json(force=True)
+
+        # Validate required fields
+        required_fields = ['CAS', 'name', 'INCI_name']
+        missing_fields = [field for field in required_fields if not data.get(field)]
+        if missing_fields:
+            return {'message': f'Missing required fields: {", ".join(missing_fields)}'}, 400
+
         new_ingredient = Ingredient(
             name=data['name'],
             INCI_name=data['INCI_name'],
+            CAS=data['CAS'],
             function=data.get('function', ''),
             description=data.get('description', ''),
             ph_min=data.get('ph_min'),
@@ -37,17 +46,19 @@ class IngredientCollection(Resource):
             use_level_min=data.get('use_level_min'),
             use_level_max=data.get('use_level_max')
         )
+
         db.session.add(new_ingredient)
         try:
             db.session.commit()
         except IntegrityError:
             db.session.rollback()
             abort(409, message="Ingredient with the given name or INCI_name already exists.")
-        # In your post method, instead of return new_ingredient.to_dict(), 201
+
         return {
             'id': new_ingredient.id,
             'name': new_ingredient.name,
             'INCI_name': new_ingredient.INCI_name,
+            'CAS': new_ingredient.CAS,
             'function': new_ingredient.function,
             'description': new_ingredient.description,
             'ph_min': new_ingredient.ph_min,
@@ -58,7 +69,6 @@ class IngredientCollection(Resource):
             'use_level_max': new_ingredient.use_level_max
         }, 201
 
-
 class IngredientItem(Resource):
     # Get one ingredient
     def get(self, id):
@@ -67,6 +77,7 @@ class IngredientItem(Resource):
             'id': ingredient.id,
             'name': ingredient.name,
             'INCI_name': ingredient.INCI_name,
+            'CAS': ingredient.CAS,
             'function': ingredient.function,
             'description': ingredient.description,
             'ph_min': ingredient.ph_min,
@@ -84,6 +95,7 @@ class IngredientItem(Resource):
         
         ingredient.name = data.get('name', ingredient.name)
         ingredient.INCI_name = data.get('INCI_name', ingredient.INCI_name)
+        ingredient.CAS = data.get('CAS', ingredient.CAS)
         ingredient.function = data.get('function', ingredient.function)
         ingredient.description = data.get('description', ingredient.description)
         ingredient.ph_min = data.get('ph_min', ingredient.ph_min)
@@ -100,6 +112,7 @@ class IngredientItem(Resource):
             'id': ingredient.id,
             'name': ingredient.name,
             'INCI_name': ingredient.INCI_name,
+            'CAS': ingredient.CAS,
             'function': ingredient.function,
             'description': ingredient.description,
             'ph_min': ingredient.ph_min,

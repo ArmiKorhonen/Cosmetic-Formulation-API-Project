@@ -1,5 +1,5 @@
 from flask_restful import Resource, abort
-from models import db, Recipe, Phase, Ingredient, RecipeIngredientPhase
+from CosmeApi.models import db, Recipe, Phase, Ingredient, RecipeIngredientPhase
 from flask import request
 from datetime import datetime
 from flask import jsonify
@@ -38,9 +38,9 @@ class RecipeCollection(Resource):
                     ingredient = Ingredient.query.get(ingredient_phase.ingredient_id)
                     if ingredient:  # Check if ingredient exists
                         phase_data['ingredients'].append({
-                            'id': ingredient.id,
                             'name': ingredient.name,
                             'INCI_name': ingredient.INCI_name,
+                            'CAS': ingredient.CAS,
                             'function': ingredient.function,
                             'description': ingredient.description,
                             'ph_min': ingredient.ph_min,
@@ -90,7 +90,7 @@ class RecipeCollection(Resource):
                     recipe_ingredient_phase = RecipeIngredientPhase(
                         recipe_id=new_recipe.id,
                         phase_id=phase.id,
-                        ingredient_id=ingredient_data['ingredient_id'],
+                        cas=ingredient_data['cas'],
                         quantity=ingredient_data['quantity']
                     )
                     db.session.add(recipe_ingredient_phase)
@@ -103,6 +103,55 @@ class RecipeCollection(Resource):
         return {'message': 'Recipe created successfully', 'id': new_recipe.id}, 201
 
 class RecipeItem(Resource):
+    def get(self, id):
+        recipe = Recipe.query.get(id)
+        if not recipe:
+            abort(404, message=f"Recipe with id {id} not found.")
+
+        # Serialize the recipe
+        recipe_data = {
+            'id': recipe.id,
+            'title': recipe.title,
+            'description': recipe.description,
+            'rating': recipe.rating,
+            'instructions': recipe.instructions,
+            'version_of': recipe.version_of,
+            'phases': []
+        }
+
+        # Include phases and their respective ingredients
+        for phase in sorted(recipe.phases, key=lambda phase: phase.order_number):
+            phase_data = {
+                'name': phase.name,
+                'note': phase.note,
+                'order_number': phase.order_number,
+                'ingredients': []
+            }
+
+            # Query ingredients associated with the current phase
+            ingredient_phases = RecipeIngredientPhase.query.filter_by(phase_id=phase.id).all()
+            for ingredient_phase in ingredient_phases:
+                ingredient = Ingredient.query.get(ingredient_phase.CAS)
+                if ingredient:  # Check if ingredient exists
+                    phase_data['ingredients'].append({
+                        'name': ingredient.name,
+                        'INCI_name': ingredient.INCI_name,
+                        'CAS': ingredient.CAS,
+                        'function': ingredient.function,
+                        'description': ingredient.description,
+                        'ph_min': ingredient.ph_min,
+                        'ph_max': ingredient.ph_max,
+                        'temp_min': ingredient.temp_min,
+                        'temp_max': ingredient.temp_max,
+                        'use_level_min': ingredient.use_level_min,
+                        'use_level_max': ingredient.use_level_max,
+                        'quantity': ingredient_phase.quantity
+                    })
+
+            recipe_data['phases'].append(phase_data)
+
+        return jsonify(recipe_data)
+
     def delete(self, id):
         recipe = Recipe.query.get(id)
         if not recipe:

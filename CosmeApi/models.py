@@ -14,7 +14,8 @@ class Recipe(db.Model):
 
 class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True, nullable=False)
+    CAS = db.Column(db.String(100), unique=True, nullable=False)
+    name = db.Column(db.String(50), nullable=False)
     INCI_name = db.Column(db.String(100), nullable=False)
     function = db.Column(db.String(100), nullable=True)
     description = db.Column(db.Text, nullable=True)
@@ -36,6 +37,7 @@ class RecipeIngredientPhase(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id', ondelete="CASCADE"), nullable=False)
     phase_id = db.Column(db.Integer, db.ForeignKey('phase.id', ondelete="CASCADE"), nullable=False)
-    ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredient.id', ondelete='RESTRICT'), nullable=False)
+    CAS = db.Column(db.String(100), db.ForeignKey('ingredient.CAS', ondelete='RESTRICT'), nullable=False)
     quantity = db.Column(db.Float, nullable=False)
+
 

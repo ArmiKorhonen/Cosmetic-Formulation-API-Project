@@ -1,0 +1,173 @@
+{
+  "ingredients": [
+    {
+      "name": "Water",
+      "INCI_name": "Aqua",
+      "CAS": "7732-18-5",
+      "function": "Solvent",
+      "description": "Water is the most widely used solvent in cosmetic and personal care products. It is primarily used to dissolve many of the ingredients that impart skin benefits, such as conditioning agents and cleansing agents.",
+      "ph_min": null,
+      "ph_max": null,
+      "temp_min": 0.0,
+      "temp_max": 100.0,
+      "use_level_min": 0.0,
+      "use_level_max": 100.0
+    },
+    {
+      "name": "Stearic Acid",
+      "INCI_name": "Stearic Acid",
+      "CAS": "57-11-4",
+      "function": "Surfactant, Emulsifier",
+      "description": "Stearic Acid is a fatty acid used as an emulsifier and surfactant. It has cleansing and emulsifying properties, making it useful in soaps and lotions.",
+      "ph_min": 5.5,
+      "ph_max": 8.0,
+      "temp_min": 54.0,
+      "temp_max": 70.0,
+      "use_level_min": 0.5,
+      "use_level_max": 5.0
+    },
+    {
+      "name": "Phenoxyethanol",
+      "INCI_name": "Phenoxyethanol",
+      "CAS": "122-99-6",
+      "function": "Preservative",
+      "description": "Phenoxyethanol is a glycol ether used as a preservative in cosmetic and personal care products. It is effective against a broad spectrum of microorganisms and is often used to extend the shelf life of products.",
+      "ph_min": 3.0,
+      "ph_max": 10.0,
+      "temp_min": null,
+      "temp_max": 85.0,
+      "use_level_min": 0.1,
+      "use_level_max": 1.0
+    },
+    {
+      "name": "Mineral Oil",
+      "INCI_name": "Paraffinum Liquidum",
+      "CAS": "8042-47-5",
+      "function": "Emollient",
+      "description": "Mineral Oil, also known as Paraffinum Liquidum, is a highly refined petroleum-derived oil. It is used in a variety of cosmetic and personal care products for its ability to lock in moisture and create a protective barrier on the skin.",
+      "ph_min": null,
+      "ph_max": null,
+      "temp_min": null,
+      "temp_max": null,
+      "use_level_min": 0.5,
+      "use_level_max": 10.0
+    },
+    {
+      "name": "Glycerine",
+      "INCI_name": "Glycerin",
+      "CAS": "56-81-5",
+      "function": "Humectant, Moisturizer",
+      "description": "Glycerine, also known as glycerol, is a natural compound derived from vegetable oils or animal fats. It is a colorless and odorless liquid that is widely used in cosmetic products for its excellent moisturizing and hydrating properties. Glycerine works by drawing water into the outer layer of the skin from deeper levels of the skin and the air.",
+      "ph_min": null,
+      "ph_max": null,
+      "temp_min": null,
+      "temp_max": null,
+      "use_level_min": 0.5,
+      "use_level_max": 20.0
+    }
+  ]
+  ,
+  "recipes": [
+    {
+        "title": "Basic Moisturizer",
+        "description": "Simple moisturizer with glycerine.",
+        "rating": null,
+        "instructions": "Mix the phases and allow to set for 24 hours before using.",
+        "phases": [
+          {
+            "name": "Water phase",
+            "note": "Heat and hold to 80C.",
+            "order_number": 1,
+            "ingredients": [
+              {
+                "CAS": "7732-18-5",
+                "quantity": 89.5
+              },
+              {
+                "CAS": "56-81-5",
+                "quantity": 2
+              }
+            ]
+          },
+          {
+            "name": "Oil phase",
+            "note": "Heat until melted.",
+            "order_number": 2,
+            "ingredients": [
+              {
+                "CAS": "8042-47-5",
+                "quantity": 5
+              },
+              {
+                "CAS": "57-11-4",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "name": "Cooldown phase",
+            "note": "Mix after cooldown to below 50C.",
+            "order_number": 3,
+            "ingredients": [
+              {
+                "CAS": "122-99-6",
+                "quantity": 0.5
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Basic Moisturizer, version 2",
+        "description": "Simple moisturizer with glycerine.",
+        "rating": null,
+        "instructions": "Mix the phases and allow to set for 24 hours before using.",
+        "version_of": 1,
+        "phases": [
+          {
+            "name": "Water phase",
+            "note": "Heat and hold to 80C.",
+            "order_number": 1,
+            "ingredients": [
+              {
+                "CAS": "7732-18-5",
+                "quantity": 86.5
+              },
+              {
+                "CAS": "56-81-5",
+                "quantity": 5
+              }
+            ]
+          },
+          {
+            "name": "Oil phase",
+            "note": "Heat until melted.",
+            "order_number": 2,
+            "ingredients": [
+              {
+                "CAS": "8042-47-5",
+                "quantity": 5
+              },
+              {
+                "CAS": "57-11-4",
+                "quantity": 3
+              }
+            ]
+          },
+          {
+            "name": "Cooldown phase",
+            "note": "Mix after cooldown to below 50C.",
+            "order_number": 3,
+            "ingredients": [
+              {
+                "CAS": "122-99-6",
+                "quantity": 0.8
+              }
+            ]
+          }
+        ]
+      }
+      
+      
+  ]
+}
