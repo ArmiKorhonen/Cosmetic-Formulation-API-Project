@@ -17,7 +17,7 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#fffefb', // This is a shade of dark green.
-      contrastText: '#ffffff', // This ensures text is white.
+      //contrastText: '#ffffff', // This ensures text is white.
       color: '#00668c'
     },
     background: {

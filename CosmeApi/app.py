@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
 from flask_migrate import Migrate
+from flask_cors import CORS
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from CosmeApi.models import db
@@ -13,6 +14,9 @@ class Config:
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__)
+    
+    # Enable CORS for all routes and origins
+    CORS(app)
     
     # Use the default configuration defined by the Config class
     app.config.from_object(Config)

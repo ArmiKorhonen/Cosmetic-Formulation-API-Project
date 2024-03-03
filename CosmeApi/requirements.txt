@@ -4,8 +4,11 @@ astroid==3.1.0
 blinker==1.7.0
 click==8.1.7
 colorama==0.4.6
+-e git+https://github.com/ArmiKorhonen/Cosmetic-Formulation-API-Project.git@ddddda8c0d8db878643d17e9298f769f8ef3e401#egg=CosmeApi
+coverage==7.4.3
 dill==0.3.8
 Flask==3.0.2
+Flask-Cors==4.0.0
 Flask-Migrate==4.0.5
 Flask-RESTful==0.3.10
 Flask-SQLAlchemy==3.1.1
@@ -23,6 +26,7 @@ platformdirs==4.2.0
 pluggy==1.4.0
 pylint==3.1.0
 pytest==8.0.2
+pytest-cov==4.1.0
 pytest-flask==1.3.0
 pytz==2024.1
 six==1.16.0
