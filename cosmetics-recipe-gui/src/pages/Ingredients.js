@@ -42,7 +42,7 @@ const IngredientsPage = () => {
       <Button variant="contained" onClick={fetchIngredients} style={{ marginBottom: '20px' }}>
         Load Ingredients
       </Button>
-      <div style={{ height: 400, width: '100%' }}>
+      <div style={{ height: '100%', width: '100%' }}>
         <DataGrid
           rows={ingredients.map((ingredient, index) => ({ id: index, ...ingredient }))}
           columns={columns}

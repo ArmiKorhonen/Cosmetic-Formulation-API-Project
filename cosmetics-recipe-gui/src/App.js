@@ -10,6 +10,7 @@ import RecipesPage from './pages/Recipes';
 import IngredientsPage from './pages/Ingredients';
 
 import DrawerComponent from './DrawerComponent';
+import AddIngredientPage from './pages/IngredientAdd';
 
 
 
@@ -56,7 +57,7 @@ const App = () => {
             <Route path="/recipes/list" element={<RecipesPage />} />
             <Route path="/recipes/add" element={<RecipesPage />} />
             <Route path="/ingredients/list" element={<IngredientsPage />} />
-            <Route path="/ingredients/add" element={<IngredientsPage />} />
+            <Route path="/ingredients/add" element={<AddIngredientPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>
