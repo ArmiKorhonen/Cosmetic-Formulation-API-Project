@@ -35,7 +35,7 @@ class RecipeCollection(Resource):
                 # Query ingredients associated with the current phase
                 ingredient_phases = RecipeIngredientPhase.query.filter_by(phase_id=phase.id).all()
                 for ingredient_phase in ingredient_phases:
-                    ingredient = Ingredient.query.get(ingredient_phase.ingredient_id)
+                    ingredient = Ingredient.query.get(ingredient_phase.CAS)
                     if ingredient:  # Check if ingredient exists
                         phase_data['ingredients'].append({
                             'name': ingredient.name,

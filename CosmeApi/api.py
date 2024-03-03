@@ -8,6 +8,6 @@ api = Api(api_bp)
 
 # Register resources
 api.add_resource(IngredientCollection, '/ingredients')
-api.add_resource(IngredientItem, '/ingredients/<int:id>')
+api.add_resource(IngredientItem, '/ingredients/<string:cas>')
 api.add_resource(RecipeCollection, '/recipes') 
 api.add_resource(RecipeItem, '/recipes/<int:id>')

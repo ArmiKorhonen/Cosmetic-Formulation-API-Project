@@ -6,6 +6,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
 import InstructionsPage from './pages/Instructions';
+import RecipesPage from './pages/Recipes';
+import IngredientsPage from './pages/Ingredients';
 import Stack from '@mui/material/Stack';
 
 
@@ -14,11 +16,12 @@ const drawerWidth = 240;
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#004d40', // This is a shade of dark green.
+      main: '#fffefb', // This is a shade of dark green.
       contrastText: '#ffffff', // This ensures text is white.
+      color: '#00668c'
     },
     background: {
-      default: '#004d40', // Change the default background to dark green.
+      default: '#fffefb', // Change the default background to dark green.
     },
   },
   components: {
@@ -26,8 +29,8 @@ const theme = createTheme({
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          backgroundColor: '#004d40', // Drawer paper color.
-          color: '#ffffff', // Text color for items in the drawer.
+          backgroundColor: '#f5f4f1', // Drawer paper color.
+          color: '#00668c'
         },
       },
     },
@@ -58,26 +61,29 @@ const App = () => {
           
         </Toolbar>
           <List>
-            <ListItem button component={Link} to="/">
+            <ListItem component={Link} to="/">
               <ListItemText primary="Instructions" />
             </ListItem>
-            {/* Add other navigation items here */}
+            <ListItem component={Link} to="/recipes">
+              <ListItemText primary="Recipes" />
+            </ListItem>
+            <ListItem component={Link} to="/ingredients">
+              <ListItemText primary="Ingredients" />
+            </ListItem>
           </List>
         </Drawer>
         <Box
           component="main"
           sx={{
             flexGrow: 1,
-            p: 3
-            //width: `calc(100% - ${drawerWidth}px)`, // Removed the breakpoint to apply for all sizes
-            //marginLeft: `${drawerWidth}px`, // Removed the breakpoint to apply for all sizes
-        
+            p: 3      
           }}
         >
           <Toolbar />
           <Routes>
             <Route path="/" element={<InstructionsPage />} />
-            {/* Define other routes here */}
+            <Route path="/recipes" element={<RecipesPage />} />
+            <Route path="/ingredients" element={<IngredientsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>

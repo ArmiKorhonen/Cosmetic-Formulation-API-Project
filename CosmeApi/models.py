@@ -12,8 +12,7 @@ class Recipe(db.Model):
     version_of = db.Column(db.Integer, nullable=True)
 
 class Ingredient(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    CAS = db.Column(db.String(100), unique=True, nullable=False)
+    CAS = db.Column(db.String(100), primary_key=True, unique=True, nullable=False)
     name = db.Column(db.String(50), nullable=False)
     INCI_name = db.Column(db.String(100), nullable=False)
     function = db.Column(db.String(100), nullable=True)

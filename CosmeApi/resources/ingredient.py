@@ -8,7 +8,6 @@ class IngredientCollection(Resource):
     def get(self):
         ingredients = Ingredient.query.all()
         ingredients_list = [{
-            'id': ingredient.id,
             'name': ingredient.name,
             'INCI_name': ingredient.INCI_name,
             'CAS': ingredient.CAS,
@@ -55,7 +54,6 @@ class IngredientCollection(Resource):
             abort(409, message="Ingredient with the given name or INCI_name already exists.")
 
         return {
-            'id': new_ingredient.id,
             'name': new_ingredient.name,
             'INCI_name': new_ingredient.INCI_name,
             'CAS': new_ingredient.CAS,
@@ -70,11 +68,11 @@ class IngredientCollection(Resource):
         }, 201
 
 class IngredientItem(Resource):
-    # Get one ingredient
-    def get(self, id):
-        ingredient = Ingredient.query.get_or_404(id)
+
+    # Get one ingredient by CAS number
+    def get(self, cas):
+        ingredient = Ingredient.query.filter_by(CAS=cas).first_or_404()
         return {
-            'id': ingredient.id,
             'name': ingredient.name,
             'INCI_name': ingredient.INCI_name,
             'CAS': ingredient.CAS,
@@ -88,9 +86,10 @@ class IngredientItem(Resource):
             'use_level_max': ingredient.use_level_max
         }
 
+
     # Update the information of one existing ingredient
-    def put(self, id):
-        ingredient = Ingredient.query.get_or_404(id)
+    def put(self, cas):
+        ingredient = Ingredient.query.filter_by(CAS=cas).first_or_404()
         data = request.get_json(force=True)
         
         ingredient.name = data.get('name', ingredient.name)
@@ -109,7 +108,6 @@ class IngredientItem(Resource):
 
         # Return the updated ingredient as a dictionary
         return {
-            'id': ingredient.id,
             'name': ingredient.name,
             'INCI_name': ingredient.INCI_name,
             'CAS': ingredient.CAS,
@@ -124,8 +122,8 @@ class IngredientItem(Resource):
         }, 200
 
     # Delete one ingredient
-    def delete(self, id):
-        ingredient = Ingredient.query.get_or_404(id)
+    def delete(self, cas):
+        ingredient = Ingredient.query.filter_by(CAS=cas).first_or_404()
         db.session.delete(ingredient)
         db.session.commit()
         return '', 204
