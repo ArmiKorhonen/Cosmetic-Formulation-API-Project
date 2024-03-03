@@ -20,6 +20,7 @@ const IngredientsPage = () => {
     { field: 'use_level_max', headerName: '%, max', width: 70 },
   ];
 
+
   const fetchIngredients = async () => {
     try {
       const response = await fetch('http://127.0.0.1:5000/api/ingredients');
