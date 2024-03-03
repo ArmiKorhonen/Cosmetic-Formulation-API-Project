@@ -4,14 +4,15 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import ScienceOutlinedIcon from '@mui/icons-material/ScienceOutlined';
+
 import InstructionsPage from './pages/Instructions';
 import RecipesPage from './pages/Recipes';
 import IngredientsPage from './pages/Ingredients';
-import Stack from '@mui/material/Stack';
+
+import DrawerComponent from './DrawerComponent';
 
 
-const drawerWidth = 240;
+
 
 const theme = createTheme({
   palette: {
@@ -41,37 +42,7 @@ const App = () => {
   return (
     <Router>
       <Box sx={{ display: 'flex' }}>
-        <Drawer
-          variant="permanent"
-          sx={{
-            width: drawerWidth,
-            flexShrink: 0,
-            [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
-          }}
-        >
-          {/* ... your drawer content */}
-          <Toolbar>
-          
-          <Stack direction="row" alignItems="center" gap={1}>
-            
-            <Typography variant="h5">CosmeAPI</Typography>
-            <ScienceOutlinedIcon style={{ fontSize: '2rem' }}/>
-            </Stack>
-          
-          
-        </Toolbar>
-          <List>
-            <ListItem component={Link} to="/">
-              <ListItemText primary="Instructions" />
-            </ListItem>
-            <ListItem component={Link} to="/recipes">
-              <ListItemText primary="Recipes" />
-            </ListItem>
-            <ListItem component={Link} to="/ingredients">
-              <ListItemText primary="Ingredients" />
-            </ListItem>
-          </List>
-        </Drawer>
+        <DrawerComponent />
         <Box
           component="main"
           sx={{
@@ -82,8 +53,10 @@ const App = () => {
           <Toolbar />
           <Routes>
             <Route path="/" element={<InstructionsPage />} />
-            <Route path="/recipes" element={<RecipesPage />} />
-            <Route path="/ingredients" element={<IngredientsPage />} />
+            <Route path="/recipes/list" element={<RecipesPage />} />
+            <Route path="/recipes/add" element={<RecipesPage />} />
+            <Route path="/ingredients/list" element={<IngredientsPage />} />
+            <Route path="/ingredients/add" element={<IngredientsPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>

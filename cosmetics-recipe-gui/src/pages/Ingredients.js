@@ -47,8 +47,10 @@ const IngredientsPage = () => {
           rows={ingredients.map((ingredient, index) => ({ id: index, ...ingredient }))}
           columns={columns}
           pageSize={15}
-          checkboxSelection
+          checkboxSelection={false}
+          disableRowSelectionOnClick
           disableSelectionOnClick
+
         />
       </div>
     </Paper>
