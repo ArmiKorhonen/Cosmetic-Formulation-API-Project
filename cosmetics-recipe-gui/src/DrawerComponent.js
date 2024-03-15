@@ -70,6 +70,9 @@ const DrawerComponent = () => {
             <ListItemButton sx={{ pl: 4 }} component={Link} to="/recipes/list">
               <ListItemText primary="All Recipes" />
             </ListItemButton>
+            <ListItemButton sx={{ pl: 4 }} component={Link} to="/recipes/viewrecipe">
+              <ListItemText primary="View Recipe" />
+            </ListItemButton>
             <ListItemButton sx={{ pl: 4 }} component={Link} to="/recipes/add">
               <ListItemText primary="Create New Recipe" />
             </ListItemButton>

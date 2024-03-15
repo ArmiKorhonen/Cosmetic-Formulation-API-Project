@@ -1,6 +1,8 @@
 // src/pages/RecipesPage.js
 import React, { useState } from 'react';
 import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
+
 
 const RecipesPage = () => {
   const [recipes, setRecipes] = useState([]);
@@ -42,7 +44,7 @@ const RecipesPage = () => {
               <TableRow key={recipe.id}>
                 <TableCell>{recipe.id}</TableCell>
                 <TableCell component="th" scope="row">
-                  {recipe.title}
+                <Link to={`/recipes/viewrecipe/${recipe.id}`}>{recipe.title}</Link>
                 </TableCell>
                 <TableCell>{recipe.version_of}</TableCell>
                 <TableCell>{recipe.description}</TableCell>

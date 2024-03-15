@@ -10,7 +10,8 @@ import RecipesPage from './pages/Recipes';
 import IngredientsPage from './pages/Ingredients';
 
 import DrawerComponent from './DrawerComponent';
-import AddIngredientPage from './pages/IngredientAdd';
+import SingleIngredientPage from './pages/IngredientSingle';
+import ViewRecipePage from './pages/ViewRecipe';
 
 
 
@@ -18,12 +19,12 @@ import AddIngredientPage from './pages/IngredientAdd';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#fffefb', // This is a shade of dark green.
-      //contrastText: '#ffffff', // This ensures text is white.
+      main: '#05668D',
+      //contrastText: '#ffffff',
       color: '#00668c'
     },
     background: {
-      default: '#fffefb', // Change the default background to dark green.
+      default: '#EBF2FA',
     },
   },
   components: {
@@ -31,8 +32,8 @@ const theme = createTheme({
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          backgroundColor: '#f5f4f1', // Drawer paper color.
-          color: '#00668c'
+          backgroundColor: '#05668D', // Drawer paper color.
+          color: '#FFFFFF'
         },
       },
     },
@@ -56,8 +57,10 @@ const App = () => {
             <Route path="/" element={<InstructionsPage />} />
             <Route path="/recipes/list" element={<RecipesPage />} />
             <Route path="/recipes/add" element={<RecipesPage />} />
+            <Route path="/recipes/viewrecipe/" element={<ViewRecipePage />} />
+            <Route path="/recipes/viewrecipe/:id" element={<ViewRecipePage />} />
             <Route path="/ingredients/list" element={<IngredientsPage />} />
-            <Route path="/ingredients/add" element={<AddIngredientPage />} />
+            <Route path="/ingredients/add" element={<SingleIngredientPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>

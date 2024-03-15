@@ -15,7 +15,7 @@ const IngredientsPage = () => {
     { field: 'ph_min', headerName: 'pH, min', width: 70 },
     { field: 'ph_max', headerName: 'pH, max', width: 70 },
     { field: 'temp_min', headerName: 'Temp., min', width: 90 },
-    { field: 'temp_min', headerName: 'Temp., max', width: 90 },
+    { field: 'temp_max', headerName: 'Temp., max', width: 90 },
     { field: 'use_level_min', headerName: '%, min', width: 70 },
     { field: 'use_level_max', headerName: '%, max', width: 70 },
   ];

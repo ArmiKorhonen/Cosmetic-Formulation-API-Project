@@ -5,7 +5,7 @@ import { Snackbar, Alert } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import Box from '@mui/material/Box';
 
-const AddIngredientPage = () => {
+const SingleIngredientPage = () => {
   const [ingredientData, setIngredientData] = useState({
     name: '',
     INCI_name: '',
@@ -25,26 +25,26 @@ const AddIngredientPage = () => {
 
   // Define a constant array of color values
   const chipColors = {
-    "Antimicrobial/Preservative Booster": "rgba(233, 30, 99, 0.5)",
-    "Antioxidant": "rgba(156, 39, 176, 0.5)",
-    "Colorant": "rgba(103, 58, 183, 0.5)",
-    "Emollient": "rgba(63, 81, 181, 0.5)",
-    "Emulsifier": "rgba(33, 150, 243, 0.5)",
-    "Exfoliant": "rgba(3, 169, 244, 0.5)",
-    "Film Formers": "rgba(0, 188, 212, 0.5)",
-    "Fragrance": "rgba(0, 150, 136, 0.5)",
-    "Hair Conditioning Agent": "rgba(76, 175, 80, 0.5)",
-    "Humectant": "rgba(139, 195, 74, 0.5)",
-    "Moisturizer": "rgba(205, 220, 57, 0.5)",
-    "Opacifying Agent": "rgba(255, 235, 59, 0.5)",
-    "Preservative": "rgba(255, 193, 7, 0.5)",
-    "Sequestrant": "rgba(255, 152, 0, 0.5)",
-    "Skin-Conditioning Agent": "rgba(255, 87, 34, 0.5)",
-    "Solvent": "rgba(121, 85, 72, 0.5)",
-    "Surfactant": "rgba(158, 158, 158, 0.5)",
-    "Thickener/Viscosity Modifier": "rgba(96, 125, 139, 0.5)",
-    "UV Filter/Sunscreen Agent": "rgba(120, 144, 156, 0.5)",
-    "pH Adjusters": "rgba(244, 67, 54, 0.5)",
+    "Antimicrobial/Preservative Booster": "rgba(233, 30, 99, 0.1)",
+    "Antioxidant": "rgba(156, 39, 176, 0.1)",
+    "Colorant": "rgba(103, 58, 183, 0.1)",
+    "Emollient": "rgba(63, 81, 181, 0.1)",
+    "Emulsifier": "rgba(33, 150, 243, 0.1)",
+    "Exfoliant": "rgba(3, 169, 244, 0.1)",
+    "Film Formers": "rgba(0, 188, 212, 0.1)",
+    "Fragrance": "rgba(0, 150, 136, 0.1)",
+    "Hair Conditioning Agent": "rgba(76, 175, 80, 0.1)",
+    "Humectant": "rgba(139, 195, 74, 0.1)",
+    "Moisturizer": "rgba(205, 220, 57, 0.1)",
+    "Opacifying Agent": "rgba(255, 235, 59, 0.1)",
+    "Preservative": "rgba(255, 193, 7, 0.1)",
+    "Sequestrant": "rgba(255, 152, 0, 0.1)",
+    "Skin-Conditioning Agent": "rgba(255, 87, 34, 0.1)",
+    "Solvent": "rgba(121, 85, 72, 0.1)",
+    "Surfactant": "rgba(158, 158, 158, 0.1)",
+    "Thickener/Viscosity Modifier": "rgba(96, 125, 139, 0.1)",
+    "UV Filter/Sunscreen Agent": "rgba(120, 144, 156, 0.1)",
+    "pH Adjusters": "rgba(244, 67, 54, 0.1)",
     };
 
 
@@ -224,4 +224,4 @@ const AddIngredientPage = () => {
   );
 };
 
-export default AddIngredientPage;
+export default SingleIngredientPage;
