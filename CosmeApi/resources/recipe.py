@@ -14,7 +14,6 @@ class RecipeCollection(Resource):
                 'id': recipe.id,
                 'title': recipe.title,
                 'description': recipe.description,
-                'rating': recipe.rating,
                 'instructions': recipe.instructions,
                 'version_of': recipe.version_of,
                 'phases': []
@@ -113,7 +112,6 @@ class RecipeItem(Resource):
             'id': recipe.id,
             'title': recipe.title,
             'description': recipe.description,
-            'rating': recipe.rating,
             'instructions': recipe.instructions,
             'version_of': recipe.version_of,
             'phases': []

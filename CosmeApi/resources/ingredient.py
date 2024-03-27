@@ -7,19 +7,49 @@ class IngredientCollection(Resource):
     """ Get the list of all of the ingredients in the collection"""
     def get(self):
         ingredients = Ingredient.query.all()
-        ingredients_list = [{
-            'name': ingredient.name,
-            'INCI_name': ingredient.INCI_name,
-            'CAS': ingredient.CAS,
-            'function': ingredient.function,
-            'description': ingredient.description,
-            'ph_min': ingredient.ph_min,
-            'ph_max': ingredient.ph_max,
-            'temp_min': ingredient.temp_min,
-            'temp_max': ingredient.temp_max,
-            'use_level_min': ingredient.use_level_min,
-            'use_level_max': ingredient.use_level_max
-        } for ingredient in ingredients]
+        ingredients_list = {
+            '@controls': {
+                'self': {'href': '/api/ingredients', 'method': 'GET'},
+                'addIngredient': {
+                    'href': '/api/ingredients',
+                    'method': 'POST',
+                    'encoding': 'application/json',
+                    'schema': {
+                        'type': 'object',
+                        'properties': {
+                            'CAS': {'type': 'string'},
+                            'name': {'type': 'string'},
+                            'INCI_name': {'type': 'string'},
+                            'function': {'type': 'string'},
+                            'description': {'type': 'string'},
+                            'ph_min': {'type': 'number'},
+                            'ph_max': {'type': 'number'},
+                            'temp_min': {'type': 'number'},
+                            'temp_max': {'type': 'number'},
+                            'use_level_min': {'type': 'number'},
+                            'use_level_max': {'type': 'number'},
+                        }
+                    }
+                }
+            },
+            'items': [{
+                'name': ingredient.name,
+                'INCI_name': ingredient.INCI_name,
+                'CAS': ingredient.CAS,
+                'function': ingredient.function,
+                'description': ingredient.description,
+                'ph_min': ingredient.ph_min,
+                'ph_max': ingredient.ph_max,
+                'temp_min': ingredient.temp_min,
+                'temp_max': ingredient.temp_max,
+                'use_level_min': ingredient.use_level_min,
+                'use_level_max': ingredient.use_level_max,
+                '@controls': {
+                    'self': {'href': f'/api/ingredients/{ingredient.CAS}', 'method': 'GET'},
+                    'edit': {'href': f'/api/ingredients/{ingredient.CAS}', 'method': 'PUT'},
+                    'delete': {'href': f'/api/ingredients/{ingredient.CAS}', 'method': 'DELETE'}
+                }
+            } for ingredient in ingredients]}
         return ingredients_list
 
     # Add a new ingredient to the collection
