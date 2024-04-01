@@ -94,8 +94,40 @@ class IngredientCollection(Resource):
             'temp_min': new_ingredient.temp_min,
             'temp_max': new_ingredient.temp_max,
             'use_level_min': new_ingredient.use_level_min,
-            'use_level_max': new_ingredient.use_level_max
+            'use_level_max': new_ingredient.use_level_max,
+            '@controls': {
+                'self': {
+                    'href': f'/api/ingredients/{new_ingredient.CAS}',
+                    'method': 'GET'
+                },
+                'edit': {
+                    'href': f'/api/ingredients/{new_ingredient.CAS}',
+                    'method': 'PUT',
+                    'encoding': 'application/json',
+                    'schema': {
+                        'type': 'object',
+                        'properties': {
+                            'name': {'type': 'string'},
+                            'INCI_name': {'type': 'string'},
+                            'function': {'type': 'string', 'optional': True},
+                            'description': {'type': 'string', 'optional': True},
+                            'ph_min': {'type': 'number', 'optional': True},
+                            'ph_max': {'type': 'number', 'optional': True},
+                            'temp_min': {'type': 'number', 'optional': True},
+                            'temp_max': {'type': 'number', 'optional': True},
+                            'use_level_min': {'type': 'number', 'optional': True},
+                            'use_level_max': {'type': 'number', 'optional': True},
+                        },
+                        'required': ['name', 'INCI_name']
+                    }
+                },
+                'delete': {
+                    'href': f'/api/ingredients/{new_ingredient.CAS}',
+                    'method': 'DELETE'
+                }
+            }
         }, 201
+
 
 class IngredientItem(Resource):
 
@@ -113,8 +145,40 @@ class IngredientItem(Resource):
             'temp_min': ingredient.temp_min,
             'temp_max': ingredient.temp_max,
             'use_level_min': ingredient.use_level_min,
-            'use_level_max': ingredient.use_level_max
+            'use_level_max': ingredient.use_level_max,
+            '@controls': {
+                'self': {
+                    'href': f'/api/ingredients/{ingredient.CAS}',
+                    'method': 'GET'
+                },
+                'edit': {
+                    'href': f'/api/ingredients/{ingredient.CAS}',
+                    'method': 'PUT',
+                    'encoding': 'application/json',
+                    'schema': {
+                        'type': 'object',
+                        'properties': {
+                            'name': {'type': 'string'},
+                            'INCI_name': {'type': 'string'},
+                            'function': {'type': 'string', 'optional': True},
+                            'description': {'type': 'string', 'optional': True},
+                            'ph_min': {'type': 'number', 'optional': True},
+                            'ph_max': {'type': 'number', 'optional': True},
+                            'temp_min': {'type': 'number', 'optional': True},
+                            'temp_max': {'type': 'number', 'optional': True},
+                            'use_level_min': {'type': 'number', 'optional': True},
+                            'use_level_max': {'type': 'number', 'optional': True},
+                        },
+                        
+                    }
+                },
+                'delete': {
+                    'href': f'/api/ingredients/{ingredient.CAS}',
+                    'method': 'DELETE'
+                }
+            }
         }
+
 
 
     # Update the information of one existing ingredient
@@ -136,7 +200,7 @@ class IngredientItem(Resource):
         
         db.session.commit()
 
-        # Return the updated ingredient as a dictionary
+        # Return the updated ingredient
         return {
             'name': ingredient.name,
             'INCI_name': ingredient.INCI_name,
@@ -148,8 +212,40 @@ class IngredientItem(Resource):
             'temp_min': ingredient.temp_min,
             'temp_max': ingredient.temp_max,
             'use_level_min': ingredient.use_level_min,
-            'use_level_max': ingredient.use_level_max
+            'use_level_max': ingredient.use_level_max,
+            '@controls': {
+                'self': {
+                    'href': f'/api/ingredients/{ingredient.CAS}',
+                    'method': 'GET'
+                },
+                'edit': {
+                    'href': f'/api/ingredients/{ingredient.CAS}',
+                    'method': 'PUT',
+                    'encoding': 'application/json',
+                    'schema': {
+                        'type': 'object',
+                        'properties': {
+                            'name': {'type': 'string'},
+                            'INCI_name': {'type': 'string'},
+                            'function': {'type': 'string', 'optional': True},
+                            'description': {'type': 'string', 'optional': True},
+                            'ph_min': {'type': 'number', 'optional': True},
+                            'ph_max': {'type': 'number', 'optional': True},
+                            'temp_min': {'type': 'number', 'optional': True},
+                            'temp_max': {'type': 'number', 'optional': True},
+                            'use_level_min': {'type': 'number', 'optional': True},
+                            'use_level_max': {'type': 'number', 'optional': True},
+                        },
+                        
+                    }
+                },
+                'delete': {
+                    'href': f'/api/ingredients/{ingredient.CAS}',
+                    'method': 'DELETE'
+                }
+            }
         }, 200
+
 
     # Delete one ingredient
     def delete(self, cas):

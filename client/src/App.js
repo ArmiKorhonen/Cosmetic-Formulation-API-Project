@@ -60,6 +60,7 @@ const App = () => {
             <Route path="/recipes/viewrecipe/:id" element={<ViewRecipePage />} />
             <Route path="/ingredients/list" element={<IngredientsPage />} />
             <Route path="/ingredients/add" element={<SingleIngredientPage />} />
+            <Route path="/ingredients/:cas" element={<SingleIngredientPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Box>
