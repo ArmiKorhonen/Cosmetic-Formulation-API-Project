@@ -1,0 +1,102 @@
+openapi: 3.0.3
+info:
+  title: Recipe Ratings API
+  version: 1.0.0
+  description: This API manages ratings for recipes.
+paths:
+  /api/recipes/{recipe_id}/ratings:
+    post:
+      summary: Add a new rating to a recipe
+      operationId: addRating
+      parameters:
+        - name: recipe_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the recipe to rate
+      requestBody:
+        description: Rating details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rating'
+      responses:
+        '201':
+          description: Rating added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rating'
+        '400':
+          description: Failed to add rating due to an error
+        '404':
+          description: Recipe not found
+
+    get:
+      summary: Retrieve all ratings for a specific recipe
+      operationId: getAllRatings
+      parameters:
+        - name: recipe_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the recipe to get ratings for
+      responses:
+        '200':
+          description: Average ratings retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AverageRatings'
+        '404':
+          description: No ratings found for recipe
+
+components:
+  schemas:
+    Rating:
+      type: object
+      properties:
+        id:
+          type: integer
+        recipe_id:
+          type: integer
+        scent:
+          type: integer
+        stability:
+          type: integer
+        texture:
+          type: integer
+        efficacy:
+          type: integer
+        tolerance:
+          type: integer
+      required:
+        - recipe_id
+        - scent
+        - stability
+        - texture
+        - efficacy
+        - tolerance
+    AverageRatings:
+      type: object
+      properties:
+        recipe_id:
+          type: integer
+        averages:
+          type: object
+          properties:
+            scent:
+              type: number
+            stability:
+              type: number
+            texture:
+              type: number
+            efficacy:
+              type: number
+            tolerance:
+              type: number
+            overall:
+              type: number

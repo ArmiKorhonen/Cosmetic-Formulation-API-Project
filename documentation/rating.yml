@@ -1,0 +1,67 @@
+openapi: 3.0.3
+info:
+  title: Recipe Ratings API
+  version: 1.0.0
+  description: This API manages ratings for recipes, including retrieving average ratings for a specific recipe.
+paths:
+  /api/recipes/{recipe_id}/ratings/average:
+    get:
+      summary: Retrieve the average ratings for a specific recipe
+      operationId: getAverageRatings
+      parameters:
+        - name: recipe_id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the recipe for which to retrieve average ratings
+      responses:
+        '200':
+          description: Average ratings retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  recipe_id:
+                    type: integer
+                  averages:
+                    type: object
+                    properties:
+                      scent:
+                        type: number
+                      stability:
+                        type: number
+                      texture:
+                        type: number
+                      efficacy:
+                        type: number
+                      tolerance:
+                        type: number
+                      overall:
+                        type: number
+        '404':
+          description: No ratings found for the specified recipe
+
+components:
+  schemas:
+    AverageRatings:
+      type: object
+      properties:
+        recipe_id:
+          type: integer
+        averages:
+          type: object
+          properties:
+            scent:
+              type: number
+            stability:
+              type: number
+            texture:
+              type: number
+            efficacy:
+              type: number
+            tolerance:
+              type: number
+            overall:
+              type: number

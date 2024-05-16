@@ -1,0 +1,113 @@
+openapi: 3.0.3
+info:
+  title: Ingredients API
+  version: 1.0.0
+  description: This API manages ingredient information, including retrieval, updating, and deletion of individual ingredients.
+paths:
+  /api/ingredients/{CAS}:
+    get:
+      summary: Retrieve a single ingredient by CAS number
+      operationId: getIngredient
+      parameters:
+        - name: CAS
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The CAS number of the ingredient to retrieve
+      responses:
+        '200':
+          description: Details of a single ingredient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        '404':
+          description: Ingredient not found
+
+    put:
+      summary: Update an existing ingredient
+      operationId: updateIngredient
+      parameters:
+        - name: CAS
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The CAS number of the ingredient to update
+      requestBody:
+        description: Data for updating the ingredient
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ingredient'
+      responses:
+        '200':
+          description: Ingredient updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ingredient'
+        '400':
+          description: Incomplete request - missing fields
+        '404':
+          description: Ingredient not found
+        '409':
+          description: Conflict with existing data (e.g., duplicate CAS)
+
+    delete:
+      summary: Delete an ingredient by CAS number
+      operationId: deleteIngredient
+      parameters:
+        - name: CAS
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The CAS number of the ingredient to delete
+      responses:
+        '204':
+          description: Ingredient deleted successfully
+        '404':
+          description: Ingredient not found
+
+components:
+  schemas:
+    Ingredient:
+      type: object
+      properties:
+        CAS:
+          type: string
+        name:
+          type: string
+        INCI_name:
+          type: string
+        function:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        ph_min:
+          type: number
+          nullable: true
+        ph_max:
+          type: number
+          nullable: true
+        temp_min:
+          type: number
+          nullable: true
+        temp_max:
+          type: number
+          nullable: true
+        use_level_min:
+          type: number
+          nullable: true
+        use_level_max:
+          type: number
+          nullable: true
+      required:
+        - CAS
+        - name
+        - INCI_name

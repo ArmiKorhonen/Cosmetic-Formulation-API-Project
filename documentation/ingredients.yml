@@ -1,0 +1,96 @@
+openapi: 3.0.3
+info:
+  title: Ingredients API
+  version: 1.0.0
+  description: This API manages ingredient information, including creation and listing of ingredients.
+components:
+  schemas:
+    Ingredient:
+      type: object
+      properties:
+        CAS:
+          type: string
+        name:
+          type: string
+        INCI_name:
+          type: string
+        function:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        ph_min:
+          type: number
+          nullable: true
+        ph_max:
+          type: number
+          nullable: true
+        temp_min:
+          type: number
+          nullable: true
+        temp_max:
+          type: number
+          nullable: true
+        use_level_min:
+          type: number
+          nullable: true
+        use_level_max:
+          type: number
+          nullable: true
+      required:
+        - CAS
+        - name
+        - INCI_name
+paths:
+  /api/ingredients:
+    get:
+      summary: List all ingredients
+      operationId: listIngredients
+      responses:
+        '200':
+          description: A list of ingredients.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ingredient'
+    post:
+      summary: Add a new ingredient
+      operationId: createIngredient
+      requestBody:
+        description: Ingredient to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ingredient'
+            examples:
+              ingredient_create_example:
+                value:
+                  CAS: "123-45-6"
+                  name: "Ingredient Name"
+                  INCI_name: "INCI Name"
+                  function: "Emulsifier"
+                  description: "Description here"
+                  ph_min: 6.5
+                  ph_max: 7.5
+                  temp_min: 10
+                  temp_max: 25
+                  use_level_min: 0.01
+                  use_level_max: 0.1
+      responses:
+        '201':
+          description: Ingredient added
+          headers:
+            Location:
+              schema:
+                type: string
+              description: URL of the created ingredient
+        '400':
+          description: Incomplete request - missing fields
+        '409':
+          description: Ingredient with the given CAS already exists
+        '415':
+          description: Request content type must be JSON

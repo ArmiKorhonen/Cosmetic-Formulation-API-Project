@@ -1,0 +1,137 @@
+openapi: 3.0.3
+info:
+  title: Recipes API
+  version: 1.0.0
+  description: This API manages recipes, including creation and listing of recipes.
+paths:
+  /api/recipes:
+    get:
+      summary: List all recipes
+      operationId: listRecipes
+      responses:
+        '200':
+          description: A list of recipes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+    post:
+      summary: Create a new recipe
+      operationId: createRecipe
+      requestBody:
+        description: Recipe to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeCreate'
+      responses:
+        '201':
+          description: Recipe created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: integer
+        '400':
+          description: Incomplete request - missing fields
+        '500':
+          description: Error creating recipe
+
+components:
+  schemas:
+    Recipe:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        instructions:
+          type: string
+          nullable: true
+        version_of:
+          type: integer
+          nullable: true
+        phases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phase'
+    Phase:
+      type: object
+      properties:
+        name:
+          type: string
+        note:
+          type: string
+          nullable: true
+        order_number:
+          type: integer
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeIngredient'
+    RecipeIngredient:
+      type: object
+      properties:
+        cas:
+          type: string
+        quantity:
+          type: number
+        name:
+          type: string
+          nullable: true
+        INCI_name:
+          type: string
+          nullable: true
+        function:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        ph_min:
+          type: number
+          nullable: true
+        ph_max:
+          type: number
+          nullable: true
+        temp_min:
+          type: number
+          nullable: true
+        temp_max:
+          type: number
+          nullable: true
+        use_level_min:
+          type: number
+          nullable: true
+        use_level_max:
+          type: number
+          nullable: true
+    RecipeCreate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        instructions:
+          type: string
+          nullable: true
+        version_of:
+          type: integer
+          nullable: true
+        phases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phase'

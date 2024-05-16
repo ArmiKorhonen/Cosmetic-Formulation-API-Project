@@ -1,0 +1,172 @@
+openapi: 3.0.3
+info:
+  title: Recipes API
+  version: 1.0.0
+  description: This API manages recipes, including retrieval, updating, and deletion of individual recipes.
+paths:
+  /api/recipes/{id}:
+    get:
+      summary: Retrieve a single recipe by ID
+      operationId: getRecipe
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the recipe to retrieve
+      responses:
+        '200':
+          description: Details of a single recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeDetail'
+        '404':
+          description: Recipe not found
+    put:
+      summary: Update an existing recipe
+      operationId: updateRecipe
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the recipe to update
+      requestBody:
+        description: Data for updating the recipe
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecipeCreate'
+      responses:
+        '200':
+          description: Recipe updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeDetail'
+        '400':
+          description: Incomplete request - missing fields
+        '404':
+          description: Recipe not found
+        '409':
+          description: Conflict with existing data (e.g., duplicate title)
+    delete:
+      summary: Delete a recipe by ID
+      operationId: deleteRecipe
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: The ID of the recipe to delete
+      responses:
+        '200':
+          description: Recipe deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Recipe not found
+        '500':
+          description: Failed to delete recipe
+
+components:
+  schemas:
+    RecipeDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        instructions:
+          type: string
+          nullable: true
+        version_of:
+          type: integer
+          nullable: true
+        phases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phase'
+    Phase:
+      type: object
+      properties:
+        name:
+          type: string
+        note:
+          type: string
+          nullable: true
+        order_number:
+          type: integer
+        ingredients:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecipeIngredient'
+    RecipeIngredient:
+      type: object
+      properties:
+        cas:
+          type: string
+        quantity:
+          type: number
+        name:
+          type: string
+          nullable: true
+        INCI_name:
+          type: string
+          nullable: true
+        function:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        ph_min:
+          type: number
+          nullable: true
+        ph_max:
+          type: number
+          nullable: true
+        temp_min:
+          type: number
+          nullable: true
+        temp_max:
+          type: number
+          nullable: true
+        use_level_min:
+          type: number
+          nullable: true
+        use_level_max:
+          type: number
+          nullable: true
+    RecipeCreate:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        instructions:
+          type: string
+          nullable: true
+        version_of:
+          type: integer
+          nullable: true
+        phases:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phase'
