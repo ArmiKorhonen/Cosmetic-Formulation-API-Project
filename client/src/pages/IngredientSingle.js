@@ -1,26 +1,90 @@
-// src/pages/AddIngredientPage.js
-import React, { useState } from 'react';
-import { Button, TextField, Paper, Typography } from '@mui/material';
-import { Snackbar, Alert } from '@mui/material';
-import Chip from '@mui/material/Chip';
-import Box from '@mui/material/Box';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Button, TextField, Paper, Typography, Snackbar, Alert, Chip, Box } from '@mui/material';
 
 const SingleIngredientPage = () => {
-  const [ingredientData, setIngredientData] = useState({
-    name: '',
-    INCI_name: '',
-    CAS: '',
-    function: '',
-    description: '',
-    ph_min: null,
-    ph_max: null,
-    temp_min: null,
-    temp_max: null,
-    use_level_min: null,
-    use_level_max: null
-  });
-
+  const { cas } = useParams();
+  const navigate = useNavigate();
+  const [ingredientData, setIngredientData] = useState({});
+  const [schema, setSchema] = useState({});
   const [selectedFunctions, setSelectedFunctions] = useState([]);
+  const apiUrl = 'http://127.0.0.1:5000/api/ingredients'; // Your API URL
+
+  // Fetch schema and ingredient details if editing
+  useEffect(() => {
+    fetchSchema();
+    if (cas) {
+      fetchIngredientDetails(cas);
+    }
+  }, [cas]);
+
+  // Fetch the schema from the API
+  const fetchSchema = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/schema`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      const schemaData = await response.json();
+      setSchema(schemaData.properties);
+      initializeFormData(schemaData.properties);
+    } catch (error) {
+      console.error("Could not fetch schema:", error);
+    }
+  };
+
+  // Initialize form data based on the schema
+  const initializeFormData = (schemaProperties) => {
+    const initialData = {};
+    Object.keys(schemaProperties).forEach(key => {
+      const property = schemaProperties[key];
+      initialData[key] = property.type === 'number' ? null : '';
+    });
+    setIngredientData(initialData);
+  };
+
+  // Fetch ingredient details for editing
+  const fetchIngredientDetails = async (casNumber) => {
+      try {
+          const response = await fetch(`${apiUrl}/${casNumber}`);
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          let ingredient = await response.json();
+          // Exclude non-editable or system fields like @controls
+          const { '@controls': _, ...editableFields } = ingredient;
+          setIngredientData(editableFields);
+          // Handling functions, if needed
+          if (ingredient.function) {
+              setSelectedFunctions(ingredient.function.split(', '));
+          }
+      } catch (error) {
+          console.error("Could not fetch ingredient details:", error);
+      }
+  };
+
+
+  // Handle form submission for both adding and updating ingredients
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const method = cas ? 'PUT' : 'POST';
+    const url = cas ? `${apiUrl}/${cas}` : apiUrl;
+    try {
+      const response = await fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(ingredientData),
+      });
+      if (response.ok) {
+        const message = cas ? 'Ingredient updated successfully!' : 'Ingredient added successfully!';
+        setSnackbar({ open: true, message: message, severity: 'success' });
+        navigate('/ingredients/list'); // Redirect to the ingredients list on success
+      } else {
+        const error = await response.json();
+        setSnackbar({ open: true, message: error.message || 'An error occurred.', severity: 'error' });
+      }
+    } catch (error) {
+      console.error("Could not submit ingredient:", error);
+      setSnackbar({ open: true, message: 'An error occurred. Please try again.', severity: 'error' });
+    }
+  };
+
   const functionOptions = ["Solvent", "Surfactant", "Emulsifier", "Preservative", "Humectant", "Emollient", "Moisturizer", "Antioxidant", "Thickener/Viscosity Modifier", "Skin-Conditioning Agent", "Hair Conditioning Agent", "UV Filter/Sunscreen Agent", "Exfoliant", "Fragrance", "Colorant", "pH Adjusters", "Film Formers", "Antimicrobial/Preservative Booster", "Sequestrant", "Opacifying Agent"].sort();
 
   // Define a constant array of color values
@@ -67,6 +131,7 @@ const SingleIngredientPage = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  //Handling the adding and removing of chips from the ingredient function field
   const handleAddFunction = (func) => {
     setSelectedFunctions((prevSelected) => {
       if (!prevSelected.includes(func)) {
@@ -82,7 +147,6 @@ const SingleIngredientPage = () => {
     });
   };
   
-  
   const handleDeleteFunction = (func) => {
     setSelectedFunctions((prevSelected) => {
       const updatedSelected = prevSelected.filter((f) => f !== func);
@@ -95,9 +159,6 @@ const SingleIngredientPage = () => {
     });
   };
   
-  
-  
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     setIngredientData(prevData => ({
@@ -106,44 +167,15 @@ const SingleIngredientPage = () => {
     }));
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+
   
-    try {
-      const response = await fetch('http://127.0.0.1:5000/api/ingredients', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(ingredientData),
-      });
-  
-      const result = await response.json();
-  
-      if (response.status === 201) {
-        setSnackbar({ open: true, message: 'Ingredient added successfully!', severity: 'success' });
-      } else if (response.status === 400) {
-        setSnackbar({ open: true, message: 'Missing fields. Please check your input.', severity: 'warning' });
-      } else if (response.status === 409) {
-        setSnackbar({ open: true, message: 'Ingredient already exists.', severity: 'error' });
-      } else if (response.status === 500) {
-        setSnackbar({ open: true, message: 'Server error. Please try again later.', severity: 'error' });
-      } else {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-  
-    } catch (error) {
-      console.error("Could not post ingredient:", error);
-      setSnackbar({ open: true, message: 'An error occurred. Please try again.', severity: 'error' });
-    }
-  };
   
 
   return (
     
     <Paper elevation={0} style={{ padding: '20px', margin: '20px', backgroundColor: '#fff' }}>
       <Typography variant="h4" gutterBottom>
-        Add New Ingredient
+        {cas ? 'Edit Ingredient' : 'Add New Ingredient'}
       </Typography>
       <form onSubmit={handleSubmit}>
         {Object.keys(ingredientData).map((key) => {
