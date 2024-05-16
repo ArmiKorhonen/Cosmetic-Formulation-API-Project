@@ -2,10 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Paper, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
+import { useNavigate } from 'react-router-dom';
 
 const IngredientsPage = () => {
   const [ingredients, setIngredients] = useState([]);
   const [controls, setControls] = useState({});
+  const navigate = useNavigate();
   const apiUrl = process.env.REACT_APP_API_URL;
 
   const columns = [
@@ -56,8 +58,8 @@ const IngredientsPage = () => {
 
   // Handle the edit action
   const handleEdit = (ingredient) => {
-    // Implement navigation to the edit page or inline editing logic
-    console.log(`Editing ${ingredient.CAS}`);
+    // Navigate to the edit page
+    navigate(`/ingredients/${ingredient.CAS}`);
   };
 
   // Handle the delete action

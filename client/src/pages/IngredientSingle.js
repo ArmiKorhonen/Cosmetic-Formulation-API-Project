@@ -10,59 +10,58 @@ const SingleIngredientPage = () => {
   const [selectedFunctions, setSelectedFunctions] = useState([]);
   const apiUrl = 'http://127.0.0.1:5000/api/ingredients'; // Your API URL
 
-  // Fetch schema and ingredient details if editing
   useEffect(() => {
-    fetchSchema();
-    if (cas) {
-      fetchIngredientDetails(cas);
-    }
+    const fetchIngredients = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/api/ingredients');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data = await response.json();
+        setSchema(data['@controls'].addIngredient.schema.properties);
+        if (cas) {
+          fetchIngredientDetails(cas);
+        } else {
+          initializeFormData(data['@controls'].addIngredient.schema.properties);
+        }
+      } catch (error) {
+        console.error("Could not fetch ingredients or schema:", error);
+      }
+    };
+
+    fetchIngredients();
   }, [cas]);
 
-  // Fetch the schema from the API
-  const fetchSchema = async () => {
-    try {
-      const response = await fetch(`${apiUrl}/schema`);
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const schemaData = await response.json();
-      setSchema(schemaData.properties);
-      initializeFormData(schemaData.properties);
-    } catch (error) {
-      console.error("Could not fetch schema:", error);
-    }
-  };
-
-  // Initialize form data based on the schema
   const initializeFormData = (schemaProperties) => {
     const initialData = {};
     Object.keys(schemaProperties).forEach(key => {
-      const property = schemaProperties[key];
-      initialData[key] = property.type === 'number' ? null : '';
+      initialData[key] = ''; // Initialize all fields as empty strings
     });
     setIngredientData(initialData);
   };
 
-  // Fetch ingredient details for editing
   const fetchIngredientDetails = async (casNumber) => {
-      try {
-          const response = await fetch(`${apiUrl}/${casNumber}`);
-          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-          let ingredient = await response.json();
-          // Exclude non-editable or system fields like @controls
-          const { '@controls': _, ...editableFields } = ingredient;
-          setIngredientData(editableFields);
-          // Handling functions, if needed
-          if (ingredient.function) {
-              setSelectedFunctions(ingredient.function.split(', '));
-          }
-      } catch (error) {
-          console.error("Could not fetch ingredient details:", error);
-      }
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/api/ingredients/${casNumber}`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      let ingredient = await response.json();
+      setIngredientData(ingredient);
+    } catch (error) {
+      console.error("Could not fetch ingredient details:", error);
+    }
   };
 
 
   // Handle form submission for both adding and updating ingredients
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const cleanData = {};
+    Object.keys(ingredientData).forEach(key => {
+        if (ingredientData[key] !== '') {  // Skip empty strings
+            cleanData[key] = ingredientData[key];
+        } else if (['ph_min', 'ph_max', 'temp_min', 'temp_max', 'use_level_min', 'use_level_max'].includes(key)) {
+            cleanData[key] = null; // Set numeric fields to null if they are empty
+        }
+    });
+
     const method = cas ? 'PUT' : 'POST';
     const url = cas ? `${apiUrl}/${cas}` : apiUrl;
     try {

@@ -59,12 +59,12 @@ class RecipeCollection(Resource):
     
     def post(self):
         data = request.get_json(force=True)
+
         
         # Create the Recipe instance
         new_recipe = Recipe(
             title=data['title'],
             description=data.get('description', ''),
-            rating=data.get('rating'),
             instructions=data.get('instructions', ''),
             version_of=data.get('version_of')
         )
@@ -100,6 +100,8 @@ class RecipeCollection(Resource):
             abort(500, message=f"An error occurred while creating the recipe. {str(e)}")
         
         return {'message': 'Recipe created successfully', 'id': new_recipe.id}, 201
+    
+
 
 class RecipeItem(Resource):
     def get(self, id):

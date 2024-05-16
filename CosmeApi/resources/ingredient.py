@@ -61,6 +61,17 @@ class IngredientCollection(Resource):
         missing_fields = [field for field in required_fields if not data.get(field)]
         if missing_fields:
             return {'message': f'Missing required fields: {", ".join(missing_fields)}'}, 400
+        
+        # Clean numeric fields: convert empty strings to None and try to convert to float
+        def clean_numeric_field(value):
+            try:
+                return float(value) if value or value == 0 else None
+            except ValueError:
+                return None
+
+        numeric_fields = ['ph_min', 'ph_max', 'temp_min', 'temp_max', 'use_level_min', 'use_level_max']
+        for field in numeric_fields:
+            data[field] = clean_numeric_field(data.get(field))
 
         new_ingredient = Ingredient(
             name=data['name'],
