@@ -69,6 +69,28 @@ const AddRecipePage = () => {
   };
 
   const handleSubmitRecipe = async () => {
+    // Basic validation
+    if (!recipe.title.trim()) {
+      alert('Title is required.');
+      return;
+    }
+    if (recipe.phases.length === 0) {
+      alert('At least one phase is required.');
+      return;
+    }
+    for (const phase of recipe.phases) {
+      if (!phase.name.trim()) {
+        alert('All phases must have a name.');
+        return;
+      }
+      for (const ingredient of phase.ingredients) {
+        if (!ingredient.name.trim() || !ingredient.quantity) {
+          alert('All ingredients must have a name and quantity.');
+          return;
+        }
+      }
+    }
+  
     const payload = {
       title: recipe.title,
       description: recipe.description,
@@ -77,7 +99,7 @@ const AddRecipePage = () => {
         name: phase.name,
         note: phase.note,
         ingredients: phase.ingredients.map(ingredient => ({
-          CAS: availableIngredients.find(item => item.name === ingredient.name).CAS, // Assuming each ingredient name is unique
+          CAS: availableIngredients.find(item => item.name === ingredient.name).CAS, // Ensure that the name is unique and exists
           quantity: parseFloat(ingredient.quantity)
         }))
       }))
@@ -94,10 +116,19 @@ const AddRecipePage = () => {
   
       if (!response.ok) throw new Error('Failed to post new recipe');
       alert('Recipe added successfully!');
+      // Reset the form here or navigate the user to another page
+      setRecipe({
+        title: '',
+        description: '',
+        instructions: '',
+        phases: []
+      });
     } catch (error) {
       console.error("Failed to post new recipe:", error);
+      alert("Failed to post new recipe: " + error.message);
     }
   };
+  
   
   
 

@@ -1,15 +1,55 @@
 from flask_restful import Resource, abort
-from CosmeApi.models import db, Recipe, Phase, Ingredient, RecipeIngredientPhase
-from flask import request
+from flask import request, jsonify
 from datetime import datetime
-from flask import jsonify
+from sqlalchemy.exc import IntegrityError
+from CosmeApi.models import db, Recipe, Phase, Ingredient, RecipeIngredientPhase
 
 class RecipeCollection(Resource):
     def get(self):
         recipes = Recipe.query.all()
-        recipes_list = []
+        recipes_list = {
+            '@controls': {
+                'self': {'href': '/api/recipes', 'method': 'GET'},
+                'addRecipe': {
+                    'href': '/api/recipes',
+                    'method': 'POST',
+                    'encoding': 'application/json',
+                    'schema': {
+                        'type': 'object',
+                        'properties': {
+                            'title': {'type': 'string'},
+                            'description': {'type': 'string', 'optional': True},
+                            'instructions': {'type': 'string', 'optional': True},
+                            'version_of': {'type': 'integer', 'optional': True},
+                            'phases': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'name': {'type': 'string'},
+                                        'note': {'type': 'string', 'optional': True},
+                                        'ingredients': {
+                                            'type': 'array',
+                                            'items': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'cas': {'type': 'string'},
+                                                    'quantity': {'type': 'number'}
+                                                }
+                                            }
+                                        }
+                                    },
+                                    'required': ['name']
+                                }
+                            }
+                        },
+                        'required': ['title']
+                    }
+                }
+            },
+            'items': []
+        }
         for recipe in recipes:
-            # Serialize each recipe
             recipe_data = {
                 'id': recipe.id,
                 'title': recipe.title,
@@ -18,11 +58,7 @@ class RecipeCollection(Resource):
                 'version_of': recipe.version_of,
                 'phases': []
             }
-
-            # Sort the phases by order_number before iterating
             sorted_phases = sorted(recipe.phases, key=lambda phase: phase.order_number)
-
-            # Include phases and their respective ingredients
             for phase in sorted_phases:
                 phase_data = {
                     'name': phase.name,
@@ -30,12 +66,10 @@ class RecipeCollection(Resource):
                     'order_number': phase.order_number,
                     'ingredients': []
                 }
-
-                # Query ingredients associated with the current phase
                 ingredient_phases = RecipeIngredientPhase.query.filter_by(phase_id=phase.id).all()
                 for ingredient_phase in ingredient_phases:
                     ingredient = Ingredient.query.get(ingredient_phase.CAS)
-                    if ingredient:  # Check if ingredient exists
+                    if ingredient:
                         phase_data['ingredients'].append({
                             'name': ingredient.name,
                             'INCI_name': ingredient.INCI_name,
@@ -50,41 +84,30 @@ class RecipeCollection(Resource):
                             'use_level_max': ingredient.use_level_max,
                             'quantity': ingredient_phase.quantity
                         })
-
                 recipe_data['phases'].append(phase_data)
+            recipes_list['items'].append(recipe_data)
+        return jsonify(recipes_list)
 
-            recipes_list.append(recipe_data)
-
-        return recipes_list
-    
     def post(self):
         data = request.get_json(force=True)
-
-        
-        # Create the Recipe instance
         new_recipe = Recipe(
             title=data['title'],
             description=data.get('description', ''),
             instructions=data.get('instructions', ''),
-            version_of=data.get('version_of')
+            version_of=data.get('version_of', None)
         )
         db.session.add(new_recipe)
-        
         try:
             db.session.flush()  # Assign an ID to new_recipe without committing the transaction
-            
-            # Handle phases
-            for index, phase_data in enumerate(data['phases']):  # Use enumerate to get the index (order)
+            for index, phase_data in enumerate(data['phases']):
                 phase = Phase(
                     name=phase_data['name'],
-                    note=phase_data['note'],
-                    recipe_id=new_recipe.id,  # Link to the newly created recipe
-                    order_number=index + 1  # Use index+1 as the order number (assuming order starts at 1)
+                    note=phase_data.get('note', ''),
+                    recipe_id=new_recipe.id,
+                    order_number=index + 1
                 )
                 db.session.add(phase)
                 db.session.flush()  # Assign an ID to phase for linking with ingredients
-                
-                # Handle ingredients within each phase
                 for ingredient_data in phase_data['ingredients']:
                     recipe_ingredient_phase = RecipeIngredientPhase(
                         recipe_id=new_recipe.id,
@@ -93,33 +116,50 @@ class RecipeCollection(Resource):
                         quantity=ingredient_data['quantity']
                     )
                     db.session.add(recipe_ingredient_phase)
-            
-            db.session.commit()  # Commit everything once all insertions are done
+            db.session.commit()
+            return {'message': 'Recipe created successfully', 'id': new_recipe.id}, 201
         except Exception as e:
             db.session.rollback()
             abort(500, message=f"An error occurred while creating the recipe. {str(e)}")
-        
-        return {'message': 'Recipe created successfully', 'id': new_recipe.id}, 201
-    
-
 
 class RecipeItem(Resource):
     def get(self, id):
         recipe = Recipe.query.get(id)
         if not recipe:
             abort(404, message=f"Recipe with id {id} not found.")
-
-        # Serialize the recipe
         recipe_data = {
             'id': recipe.id,
             'title': recipe.title,
             'description': recipe.description,
             'instructions': recipe.instructions,
             'version_of': recipe.version_of,
-            'phases': []
+            'phases': [],
+            '@controls': {
+                'self': {
+                    'href': f'/api/recipes/{recipe.id}',
+                    'method': 'GET'
+                },
+                'edit': {
+                    'href': f'/api/recipes/{recipe.id}',
+                    'method': 'PUT',
+                    'encoding': 'application/json',
+                    'schema': {
+                        'type': 'object',
+                        'properties': {
+                            'title': {'type': 'string'},
+                            'description': {'type': 'string', 'optional': True},
+                            'instructions': {'type': 'string', 'optional': True},
+                            'version_of': {'type': 'integer', 'optional': True},
+                            'phases': {'type': 'array'}  # Define phase schema similarly
+                        }
+                    }
+                },
+                'delete': {
+                    'href': f'/api/recipes/{recipe.id}',
+                    'method': 'DELETE'
+                }
+            }
         }
-
-        # Include phases and their respective ingredients
         for phase in sorted(recipe.phases, key=lambda phase: phase.order_number):
             phase_data = {
                 'name': phase.name,
@@ -127,12 +167,10 @@ class RecipeItem(Resource):
                 'order_number': phase.order_number,
                 'ingredients': []
             }
-
-            # Query ingredients associated with the current phase
             ingredient_phases = RecipeIngredientPhase.query.filter_by(phase_id=phase.id).all()
             for ingredient_phase in ingredient_phases:
                 ingredient = Ingredient.query.get(ingredient_phase.CAS)
-                if ingredient:  # Check if ingredient exists
+                if ingredient:
                     phase_data['ingredients'].append({
                         'name': ingredient.name,
                         'INCI_name': ingredient.INCI_name,
@@ -147,16 +185,13 @@ class RecipeItem(Resource):
                         'use_level_max': ingredient.use_level_max,
                         'quantity': ingredient_phase.quantity
                     })
-
             recipe_data['phases'].append(phase_data)
-
         return jsonify(recipe_data)
 
     def delete(self, id):
         recipe = Recipe.query.get(id)
         if not recipe:
             abort(404, message=f"Recipe with id {id} not found.")
-        
         try:
             db.session.delete(recipe)
             db.session.commit()

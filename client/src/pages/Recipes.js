@@ -1,59 +1,39 @@
-// src/pages/RecipesPage.js
-import React, { useState } from 'react';
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
-
+import React, { useState, useEffect } from 'react';
+import { Paper, Typography, List, ListItem } from '@mui/material';
 
 const RecipesPage = () => {
   const [recipes, setRecipes] = useState([]);
+  const [controls, setControls] = useState({});
+  const apiUrl = process.env.REACT_APP_API_URL; // Ensure this is set in your environment
 
-  const fetchRecipes = async () => {
-    try {
-      const response = await fetch('http://127.0.0.1:5000/api/recipes');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/api/recipes`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setRecipes(data.items);  // Assuming the 'items' key holds the array of recipes
+        setControls(data['@controls']);  // If there are any controls sent by the server
+      } catch (error) {
+        console.error("Could not fetch recipes:", error);
       }
-      const data = await response.json();
-      setRecipes(data);
-    } catch (error) {
-      console.error("Could not fetch recipes:", error);
-    }
-  };
+    };
+
+    fetchRecipes();
+  }, [apiUrl]);
 
   return (
-    <Paper elevation={0} style={{ padding: '20px', margin: '20px', backgroundColor: '#fff' }}>
-      <Typography variant="h4" gutterBottom>
-        Recipes
-      </Typography>
-      <Button variant="contained" onClick={fetchRecipes}>
-        Load All Recipes
-      </Button>
-      <TableContainer component={Paper} style={{ marginTop: '20px' }}>
-        <Table aria-label="recipes table">
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Title</TableCell>
-              <TableCell>Version of</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell align="right">Rating</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {recipes.map((recipe) => (
-              <TableRow key={recipe.id}>
-                <TableCell>{recipe.id}</TableCell>
-                <TableCell component="th" scope="row">
-                <Link to={`/recipes/viewrecipe/${recipe.id}`}>{recipe.title}</Link>
-                </TableCell>
-                <TableCell>{recipe.version_of}</TableCell>
-                <TableCell>{recipe.description}</TableCell>
-                <TableCell align="right">{recipe.rating || 'Not rated'}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <Paper style={{ padding: '20px', margin: '20px' }}>
+      <Typography variant="h5" gutterBottom>Recipes List</Typography>
+      <List>
+        {recipes.map((recipe, index) => (
+          <ListItem key={index}>
+            {recipe.title} - {recipe.description}
+          </ListItem>
+        ))}
+      </List>
     </Paper>
   );
 };

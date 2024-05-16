@@ -1,7 +1,6 @@
 from flask_restful import Resource, abort
+from flask import request, jsonify
 from CosmeApi.models import db, Rating, Recipe
-from flask import request
-from flask import jsonify
 
 class RecipeRatingCollection(Resource):
     # Add a new rating to a recipe
@@ -13,7 +12,6 @@ class RecipeRatingCollection(Resource):
         if not recipe:
             abort(404, message=f"Recipe with id {recipe_id} not found.")
         
-        # Proceed with adding the new rating since the recipe exists
         new_rating = Rating(
             recipe_id=recipe_id,
             scent=data['scent'],
@@ -34,14 +32,18 @@ class RecipeRatingCollection(Resource):
                 'texture': new_rating.texture,
                 'efficacy': new_rating.efficacy,
                 'tolerance': new_rating.tolerance,
-                'average_rating': new_rating.average_rating
+                '@controls': {
+                    'self': {
+                        'href': f'/api/recipes/{recipe_id}/ratings/{new_rating.id}',
+                        'method': 'GET'
+                    }
+                }
             }, 201
         except Exception as e:
             db.session.rollback()
-            abort(400, message=f"Failed to add rating due to an error: {e}")
+            abort(400, message=f"Failed to add rating due to an error: {str(e)}")
 
     def get(self, recipe_id):
-        # Method to retrieve all ratings for a recipe and calculate averages
         ratings = Rating.query.filter_by(recipe_id=recipe_id).all()
         if not ratings:
             return {'message': f"No ratings found for recipe with id {recipe_id}"}, 404
@@ -57,7 +59,13 @@ class RecipeRatingCollection(Resource):
 
         return {
             'recipe_id': recipe_id,
-            'averages': averages
+            'averages': averages,
+            '@controls': {
+                'self': {
+                    'href': f'/api/recipes/{recipe_id}/ratings',
+                    'method': 'GET'
+                }
+            }
         }, 200
 
 class RecipeRating(Resource):
@@ -67,7 +75,6 @@ class RecipeRating(Resource):
         if not ratings:
             return {'message': f"No ratings found for recipe with id {recipe_id}"}, 404
         
-        # Calculate the average for each category and overall
         averages = {
             'scent': sum(r.scent for r in ratings) / len(ratings),
             'stability': sum(r.stability for r in ratings) / len(ratings),
@@ -79,5 +86,11 @@ class RecipeRating(Resource):
 
         return {
             'recipe_id': recipe_id,
-            'averages': averages
+            'averages': averages,
+            '@controls': {
+                'self': {
+                    'href': f'/api/recipes/{recipe_id}/ratings/average',
+                    'method': 'GET'
+                }
+            }
         }, 200
