@@ -40,6 +40,26 @@ class RecipeRatingCollection(Resource):
             db.session.rollback()
             abort(400, message=f"Failed to add rating due to an error: {e}")
 
+    def get(self, recipe_id):
+        # Method to retrieve all ratings for a recipe and calculate averages
+        ratings = Rating.query.filter_by(recipe_id=recipe_id).all()
+        if not ratings:
+            return {'message': f"No ratings found for recipe with id {recipe_id}"}, 404
+        
+        averages = {
+            'scent': sum(r.scent for r in ratings) / len(ratings),
+            'stability': sum(r.stability for r in ratings) / len(ratings),
+            'texture': sum(r.texture for r in ratings) / len(ratings),
+            'efficacy': sum(r.efficacy for r in ratings) / len(ratings),
+            'tolerance': sum(r.tolerance for r in ratings) / len(ratings),
+        }
+        averages['overall'] = sum(averages.values()) / len(averages)
+
+        return {
+            'recipe_id': recipe_id,
+            'averages': averages
+        }, 200
+
 class RecipeRating(Resource):
     # Retrieve the average ratings for a specific recipe
     def get(self, recipe_id):

@@ -8,6 +8,13 @@ const ViewRecipePage = () => {
   const [recipe, setRecipe] = useState(null);
   const [error, setError] = useState('');
   const { id } = useParams(); // This hook provides access to the `id` param from the URL
+  const [ratings, setRatings] = useState({
+      scent: 0,
+      stability: 0,
+      texture: 0,
+      efficacy: 0,
+      tolerance: 0
+  });
 
 
   useEffect(() => {
@@ -49,6 +56,49 @@ const ViewRecipePage = () => {
       console.error("Fetch error: ", error);
     }
   };
+
+  const submitRating = async () => {
+      if (!recipe || !recipe.id) {
+          alert('No recipe loaded for rating!');
+          return;
+      }
+      try {
+          const response = await fetch(`http://127.0.0.1:5000/api/recipes/${recipe.id}/ratings`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(ratings)
+          });
+          if (response.ok) {
+              alert('Rating submitted successfully!');
+              fetchAverageRatings(recipe.id);  // Fetch the latest ratings
+          } else {
+              throw new Error('Failed to submit rating');
+          }
+      } catch (error) {
+          console.error("Error submitting rating:", error);
+          alert("Failed to submit rating.");
+      }
+  };
+
+
+  const fetchAverageRatings = async (recipeId) => {
+      try {
+          const response = await fetch(`http://127.0.0.1:5000/api/recipes/${recipeId}/ratings`);
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          const data = await response.json();
+          if (data) {
+              console.log("Fetched Ratings:", data);  // Check what's actually fetched
+              setRatings(data.averages);  // Assuming the structure matches
+          }
+      } catch (error) {
+          console.error("Error fetching ratings:", error);
+      }
+  };
+
+
+
   
 
   const handleSearch = () => {
@@ -94,7 +144,22 @@ const ViewRecipePage = () => {
         <Typography variant="h6">{recipe.title}</Typography>
         <Typography variant="subtitle1">{recipe.description}</Typography>
         <Typography variant="subtitle1">{`Version of: ${recipe.version_of || 'Original Recipe'}`}</Typography>
-        <Typography variant="subtitle1">{`Rating: ${recipe.rating || 'Not rated'}`}</Typography>
+        <Typography variant="subtitle1">{`Rating: ${ratings.overall || 'Not rated'}`}</Typography>
+
+        <Box>
+            {Object.keys(ratings).map((key) => (
+                <TextField
+                    key={key}
+                    label={key.charAt(0).toUpperCase() + key.slice(1)}
+                    type="number"
+                    value={ratings[key]}
+                    onChange={(e) => setRatings({...ratings, [key]: parseFloat(e.target.value)})}
+                    inputProps={{ step: "0.1", min: "0", max: "5" }}
+                    margin="normal"
+                />
+            ))}
+            <Button onClick={submitRating} variant="contained" color="primary">Submit Rating</Button>
+        </Box>
         <Typography variant="subtitle2">Instructions:</Typography>
         <Typography paragraph>{recipe.instructions}</Typography>
         
