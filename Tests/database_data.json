@@ -71,7 +71,6 @@
     {
         "title": "Basic Moisturizer",
         "description": "Simple moisturizer with glycerine.",
-        "rating": null,
         "instructions": "Mix the phases and allow to set for 24 hours before using.",
         "phases": [
           {
@@ -115,12 +114,20 @@
               }
             ]
           }
-        ]
+        ],
+      "ratings": [
+        {
+          "scent": 4,
+          "stability": 5,
+          "texture": 5,
+          "efficacy": 4,
+          "tolerance": 4
+        }
+      ]
       },
       {
         "title": "Basic Moisturizer, version 2",
         "description": "Simple moisturizer with glycerine.",
-        "rating": null,
         "instructions": "Mix the phases and allow to set for 24 hours before using.",
         "version_of": 1,
         "phases": [
