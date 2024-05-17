@@ -1,6 +1,11 @@
-# db_setup.py
+"""
+This module sets up the database for the CosmeApi application.
+It configures the Flask app to connect to a SQLite database, initializes the SQLAlchemy ORM, 
+and creates all necessary tables defined within the application models.
+"""
+
 from flask import Flask
-from models import db, Recipe, Ingredient, Phase, RecipeIngredientPhase
+from CosmeApi.models import db  # Adjust import according to your package structure
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///cosme-api-project.db"

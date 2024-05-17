@@ -1,3 +1,9 @@
+"""
+This module provides RESTful API resources for managing ingredients in the CosmeApi application.
+It allows for the retrieval, addition, modification,
+and deletion of ingredient entries in the database.
+"""
+
 from flask_restful import Resource, abort
 from flask import request
 from sqlalchemy.exc import IntegrityError
@@ -6,6 +12,10 @@ from CosmeApi.models import db, Ingredient
 class IngredientCollection(Resource):
     """ Get the list of all of the ingredients in the collection"""
     def get(self):
+        """
+        Retrieves a list of all ingredients, providing details
+        and hypermedia controls for each ingredient.
+        """
         ingredients = Ingredient.query.all()
         ingredients_list = {
             '@controls': {
@@ -52,8 +62,11 @@ class IngredientCollection(Resource):
             } for ingredient in ingredients]}
         return ingredients_list
 
-    # Add a new ingredient to the collection
     def post(self):
+        """
+        Adds a new ingredient to the collection based on the JSON data provided.
+        Validates required fields and handles data types appropriately.
+        """
         data = request.get_json(force=True)
 
         # Validate required fields
@@ -61,7 +74,7 @@ class IngredientCollection(Resource):
         missing_fields = [field for field in required_fields if not data.get(field)]
         if missing_fields:
             return {'message': f'Missing required fields: {", ".join(missing_fields)}'}, 400
-        
+
         # Clean numeric fields: convert empty strings to None and try to convert to float
         def clean_numeric_field(value):
             try:
@@ -141,9 +154,16 @@ class IngredientCollection(Resource):
 
 
 class IngredientItem(Resource):
+    """
+    Manages individual ingredients, supporting operations to retrieve, update,
+    or delete a specific ingredient by its CAS number.
+    """
 
-    # Get one ingredient by CAS number
     def get(self, cas):
+        """
+        Retrieves details for a specific ingredient identified by its CAS number,
+        along with hypermedia controls for possible actions.
+        """
         ingredient = Ingredient.query.filter_by(CAS=cas).first_or_404()
         return {
             'name': ingredient.name,
@@ -180,7 +200,6 @@ class IngredientItem(Resource):
                             'use_level_min': {'type': 'number', 'optional': True},
                             'use_level_max': {'type': 'number', 'optional': True},
                         },
-                        
                     }
                 },
                 'delete': {
@@ -190,13 +209,14 @@ class IngredientItem(Resource):
             }
         }
 
-
-
-    # Update the information of one existing ingredient
     def put(self, cas):
+        """
+        Updates the information of an existing ingredient identified by its CAS number
+        based on JSON data provided.
+        """
         ingredient = Ingredient.query.filter_by(CAS=cas).first_or_404()
         data = request.get_json(force=True)
-        
+
         ingredient.name = data.get('name', ingredient.name)
         ingredient.INCI_name = data.get('INCI_name', ingredient.INCI_name)
         ingredient.CAS = data.get('CAS', ingredient.CAS)
@@ -208,7 +228,7 @@ class IngredientItem(Resource):
         ingredient.temp_max = data.get('temp_max', ingredient.temp_max)
         ingredient.use_level_min = data.get('use_level_min', ingredient.use_level_min)
         ingredient.use_level_max = data.get('use_level_max', ingredient.use_level_max)
-        
+
         db.session.commit()
 
         # Return the updated ingredient
@@ -247,7 +267,6 @@ class IngredientItem(Resource):
                             'use_level_min': {'type': 'number', 'optional': True},
                             'use_level_max': {'type': 'number', 'optional': True},
                         },
-                        
                     }
                 },
                 'delete': {
@@ -257,9 +276,10 @@ class IngredientItem(Resource):
             }
         }, 200
 
-
-    # Delete one ingredient
     def delete(self, cas):
+        """
+        Deletes a specific ingredient identified by its CAS number from the database.
+        """
         ingredient = Ingredient.query.filter_by(CAS=cas).first_or_404()
         db.session.delete(ingredient)
         db.session.commit()

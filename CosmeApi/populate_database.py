@@ -1,8 +1,13 @@
+"""
+Populate the database if empty.
+"""
+
 import json
 from CosmeApi.app import db, create_app
 from CosmeApi.models import Ingredient, Recipe, Phase, RecipeIngredientPhase
 
 def clear_database():
+    """Clear database"""
     # This will delete all data from the tables, resetting them
     db.session.query(RecipeIngredientPhase).delete()
     db.session.query(Phase).delete()
@@ -11,6 +16,7 @@ def clear_database():
     db.session.commit()
 
 def load_data_from_json(json_filepath='../tests/database_data.json'):
+    """Get all the data information from a json-file"""
     app = create_app()
     with app.app_context():
         with open(json_filepath, 'r') as file:
@@ -37,7 +43,6 @@ def load_data_from_json(json_filepath='../tests/database_data.json'):
                     db.session.add(ingredient)
             db.session.commit()
 
-
             # Load recipes
             for recipe_data in data["recipes"]:
                 recipe = Recipe(
@@ -59,7 +64,7 @@ def load_data_from_json(json_filepath='../tests/database_data.json'):
                         recipe_id=recipe.id
                     )
                     db.session.add(phase)
-                    db.session.flush()  # Flush to ensure the phase ID is generated for use in RecipeIngredientPhase
+                    db.session.flush()
 
                     # Load ingredients for each phase
                     for ingredient_data in phase_data["ingredients"]:

@@ -17,7 +17,6 @@ def _populate_db(initial_data):
         recipe = Recipe(
             title=recipe_data["title"],
             description=recipe_data.get("description", ""),
-            rating=recipe_data.get("rating"),
             instructions=recipe_data.get("instructions", ""),
             version_of=recipe_data.get("version_of")
         )

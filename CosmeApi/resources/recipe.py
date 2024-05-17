@@ -1,11 +1,22 @@
+"""
+API resource module for managing recipes in the CosmeApi project.
+This module provides endpoints for creating, retrieving, updating, and deleting recipes,
+including detailed information about recipe components like phases and ingredients.
+"""
+
 from flask_restful import Resource, abort
 from flask import request, jsonify
-from datetime import datetime
-from sqlalchemy.exc import IntegrityError
 from CosmeApi.models import db, Recipe, Phase, Ingredient, RecipeIngredientPhase
 
 class RecipeCollection(Resource):
+    """
+    Resource for managing a collection of recipes, allowing for retrieval and addition of recipes.
+    """
     def get(self):
+        """
+        Retrieves a list of all recipes in the database.
+        Returns the list in a JSON format with hypermedia controls for interaction.
+        """
         recipes = Recipe.query.all()
         recipes_list = {
             '@controls': {
@@ -89,6 +100,11 @@ class RecipeCollection(Resource):
         return jsonify(recipes_list)
 
     def post(self):
+        """
+        Creates a new recipe with the provided JSON payload and adds it to the database.
+        Returns a success message and the ID of the created recipe if
+        successful; otherwise, handles exceptions.
+        """
         data = request.get_json(force=True)
         new_recipe = Recipe(
             title=data['title'],
@@ -123,7 +139,16 @@ class RecipeCollection(Resource):
             abort(500, message=f"An error occurred while creating the recipe. {str(e)}")
 
 class RecipeItem(Resource):
+    """
+    Resource for managing individual recipes, 
+    allowing for retrieval, updating, and deletion of a specific recipe.
+    """
     def get(self, id):
+        """
+        Retrieves a single recipe by its ID, including detailed
+        information such as phases and ingredients.
+        Provides hypermedia controls for further interactions with the recipe.
+        """
         recipe = Recipe.query.get(id)
         if not recipe:
             abort(404, message=f"Recipe with id {id} not found.")
@@ -189,6 +214,11 @@ class RecipeItem(Resource):
         return jsonify(recipe_data)
 
     def delete(self, id):
+        """
+        Deletes a specific recipe by its ID from the database.
+        Returns a success message if the deletion is successful;
+        otherwise, handles exceptions and errors.
+        """
         recipe = Recipe.query.get(id)
         if not recipe:
             abort(404, message=f"Recipe with id {id} not found.")

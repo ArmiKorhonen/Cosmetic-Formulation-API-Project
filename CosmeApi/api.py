@@ -1,3 +1,7 @@
+"""
+This module sets up the API routes for the CosmeApi application, including endpoints.
+"""
+
 from flask import Blueprint
 from flask_restful import Api
 from CosmeApi.resources.ingredient import IngredientCollection, IngredientItem
@@ -14,4 +18,3 @@ api.add_resource(RecipeCollection, '/recipes')
 api.add_resource(RecipeItem, '/recipes/<int:id>')
 api.add_resource(RecipeRatingCollection, '/recipes/<int:recipe_id>/ratings')
 api.add_resource(RecipeRating, '/recipes/<int:recipe_id>/ratings/<int:rating_id>')
-
