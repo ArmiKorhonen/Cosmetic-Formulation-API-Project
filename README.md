@@ -33,9 +33,3 @@ Populate the database with some ingredients:
 ```bash
 python populate_ingredients.py
 ```
-
-You can query the ingredients table to see that the information is there:
-
-```bash
-python query_ingredients.py
-```
